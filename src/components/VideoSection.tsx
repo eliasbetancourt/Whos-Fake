@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 /**
  * VideoSection — embeds two hard-coded YouTube tutorial videos.
@@ -18,19 +18,12 @@ import { useState, useEffect } from "react";
  */
 export default function VideoSection() {
   const [mode, setMode] = useState<'browser' | 'mobile'>('browser');
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
-  }, []);
 
   const browserVideoId = "4eh8eJAUEdk";
   const mobileVideoId = "EJGduqb2zx4";
 
   const videoId = mode === 'browser' ? browserVideoId : mobileVideoId;
   const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}`;
-  const watchUrl = `https://www.youtube.com/watch?v=${videoId}`;
-  const thumbnailUrl = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
 
   return (
     <div style={{
@@ -57,37 +50,16 @@ export default function VideoSection() {
             : "Instagram Mobile Tutorial Video"}
         </h2>
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 32 }}>
-          {isMobile ? (
-            <a
-              href={watchUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ position: 'relative', display: 'inline-block', borderRadius: 18, overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.12)', width: '100%', maxWidth: 600 }}
-              onClick={(e) => {
-                e.preventDefault();
-                window.location.href = `youtube://watch?v=${videoId}`;
-                setTimeout(() => { window.open(watchUrl, '_blank', 'noopener,noreferrer'); }, 500);
-              }}
-            >
-              <img src={thumbnailUrl} alt="Tutorial Video" style={{ width: '100%', display: 'block' }} />
-              <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.25)' }}>
-                <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(255,0,0,0.9)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(0,0,0,0.3)' }}>
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21" /></svg>
-                </div>
-              </div>
-            </a>
-          ) : (
-            <div style={{ position: 'relative', width: '100%', paddingBottom: '56.25%', height: 0, overflow: 'hidden', borderRadius: 18, boxShadow: '0 4px 24px rgba(0,0,0,0.12)' }}>
-              <iframe
-                src={embedUrl}
-                title="Tutorial Video"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                allowFullScreen
-                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', borderRadius: 18 }}
-              />
-            </div>
-          )}
+          <div style={{ position: 'relative', width: '100%', paddingBottom: '56.25%', height: 0, overflow: 'hidden', borderRadius: 18, boxShadow: '0 4px 24px rgba(0,0,0,0.12)' }}>
+            <iframe
+              src={embedUrl}
+              title="Tutorial Video"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+              allowFullScreen
+              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', borderRadius: 18 }}
+            />
+          </div>
         </div>
         {/* Toggle */}
         <div style={{ display: 'flex', justifyContent: 'center', gap: 16 }}>
