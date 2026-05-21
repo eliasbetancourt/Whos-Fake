@@ -12,6 +12,19 @@ dist
 dist-ssr
 *.local
 
+# Secrets / environment — never commit these
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.npmrc
+
+# Never commit a real Instagram data export (PII). The app processes these
+# client-side at runtime; they must not live in the repo or be served statically.
+*.zip
+public/connections/
+
 
 # Editor directories and files
 .vscode/*

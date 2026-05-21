@@ -1,0 +1,43 @@
+# ---------------------------------------------------------------------------
+# Netlify configuration for WhosFake Insights
+#
+# Security headers (NIST CSF: PR.PT-3, PR.DS-2, OWASP Secure Headers Project).
+# These are *response headers* — they provide the protections that an HTML
+# <meta> tag cannot. In particular:
+#   • X-Frame-Options and CSP `frame-ancestors` are only honored as HTTP
+#     headers (the meta-tag form of frame-ancestors is ignored by browsers).
+#   • Strict-Transport-Security and X-Content-Type-Options cannot be set via
+#     meta tags at all.
+# The Content-Security-Policy below mirrors the meta tag in index.html and is
+# the authoritative copy; keep the two in sync when ad/video domains change.
+# ---------------------------------------------------------------------------
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Authoritative CSP (header form enables frame-ancestors). Mirrors index.html.
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://pagead2.googlesyndication.com https://adservice.google.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com https://*.ytimg.com https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net; font-src 'self'; connect-src 'self' https://pagead2.googlesyndication.com https://adservice.google.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+    # Clickjacking protection (legacy header complementing frame-ancestors).
+    X-Frame-Options = "DENY"
+    # Disable MIME-type sniffing — forces declared Content-Type.
+    X-Content-Type-Options = "nosniff"
+    # Force HTTPS for two years, including subdomains; eligible for preload list.
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+    # Send minimal referrer cross-origin.
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    # Deny powerful browser APIs the app does not use.
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=(), interest-cohort=()"
+    # Isolate this origin from cross-origin window references.
+    Cross-Origin-Opener-Policy = "same-origin"
+    # Limit what other origins may embed our resources.
+    Cross-Origin-Resource-Policy = "same-origin"
+
+# Long-cache the fingerprinted Vite assets (safe — filenames are content-hashed).
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
