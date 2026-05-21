@@ -160,208 +160,219 @@ const ResultsTable: React.FC<ResultsTableProps> = ({ results, showNotice = false
           <div style={{ color: "#666" }}>Unfollowers</div>
         </div>
       </div>
-      <table
-        style={{
-          width: "100%",
-          borderCollapse: "collapse",
-          marginTop: "2vw",
-          background: "white",
-          borderRadius: 12,
-          overflow: "hidden",
-          boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
-        }}
-      >
-        <thead>
-          <tr>
-            <th
-              style={{
-                padding: 15,
-                textAlign: "left",
-                background: "#f8fafc",
-                fontWeight: 600,
-                color: "#374151",
-                verticalAlign: "middle",
-              }}
-            >
-              Username
-            </th>
-            <th
-              style={{
-                padding: 15,
-                textAlign: "left",
-                background: "#f8fafc",
-                fontWeight: 600,
-                color: "#374151",
-                verticalAlign: "middle",
-              }}
-            >
-              Following Since
-            </th>
-            <th
-              style={{
-                padding: 15,
-                textAlign: "center",
-                background: "#f8fafc",
-                fontWeight: 600,
-                color: "#374151",
-                verticalAlign: "middle",
-              }}
-            >
-              Unfollow
-            </th>
-            <th
-              style={{
-                padding: 15,
-                textAlign: "center",
-                background: "#f8fafc",
-                fontWeight: 600,
-                color: "#374151",
-                verticalAlign: "middle",
-              }}
-            >
-              Remove
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {unfollowersList.map((user: any, index: number) => {
-            // Sanitize timestamp into a friendly string, or fall back to "-".
-            let since = "-";
-            if (typeof user.timestamp === "number" && Number.isFinite(user.timestamp)) {
-              const ms = user.timestamp * 1000;
-              const date = new Date(ms);
-              if (!Number.isNaN(date.getTime())) {
-                since = date.toLocaleDateString(undefined, {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                });
+      <div style={{ overflowX: 'auto', width: '100%', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
+        <table
+          style={{
+            width: "100%",
+            minWidth: 340,
+            borderCollapse: "collapse",
+            marginTop: "2vw",
+            background: "white",
+            borderRadius: 12,
+            overflow: "hidden",
+            boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
+          }}
+        >
+          <thead>
+            <tr>
+              <th
+                style={{
+                  padding: 'clamp(6px, 2vw, 15px)',
+                  textAlign: "left",
+                  background: "#f8fafc",
+                  fontWeight: 600,
+                  color: "#374151",
+                  verticalAlign: "middle",
+                }}
+              >
+                Username
+              </th>
+              <th
+                style={{
+                  padding: 'clamp(6px, 2vw, 15px)',
+                  textAlign: "left",
+                  background: "#f8fafc",
+                  fontWeight: 600,
+                  color: "#374151",
+                  verticalAlign: "middle",
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                Following Since
+              </th>
+              <th
+                style={{
+                  padding: 'clamp(6px, 2vw, 15px)',
+                  textAlign: "center",
+                  background: "#f8fafc",
+                  fontWeight: 600,
+                  color: "#374151",
+                  verticalAlign: "middle",
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                Unfollow
+              </th>
+              <th
+                style={{
+                  padding: 'clamp(6px, 2vw, 15px)',
+                  textAlign: "center",
+                  background: "#f8fafc",
+                  fontWeight: 600,
+                  color: "#374151",
+                  verticalAlign: "middle",
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                Remove
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {unfollowersList.map((user: any, index: number) => {
+              // Sanitize timestamp into a friendly string, or fall back to "-".
+              let since = "-";
+              if (typeof user.timestamp === "number" && Number.isFinite(user.timestamp)) {
+                const ms = user.timestamp * 1000;
+                const date = new Date(ms);
+                if (!Number.isNaN(date.getTime())) {
+                  since = date.toLocaleDateString(undefined, {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  });
+                }
               }
-            }
 
-            // Sanitize username for display (React still escapes text nodes).
-            const safeUsername = sanitizeDisplayName(user.username) || `Missing_${index}`;
-            // Whitelist URL through Instagram-only allow-list.
-            const profileHref = toAbsoluteUrl(user.profileUrl);
-            const linkable = profileHref !== "#";
+              // Sanitize username for display (React still escapes text nodes).
+              const safeUsername = sanitizeDisplayName(user.username) || `Missing_${index}`;
+              // Whitelist URL through Instagram-only allow-list.
+              const profileHref = toAbsoluteUrl(user.profileUrl);
+              const linkable = profileHref !== "#";
 
-            return (
-              <tr key={safeUsername + ":" + index}>
-                <td
-                  style={{
-                    padding: 15,
-                    borderBottom: "1px solid #e5e7eb",
-                    background: "white",
-                    color: "#3b82f6",
-                    fontWeight: 600,
-                    verticalAlign: "middle",
-                    textAlign: "left",
-                  }}
-                >
-                  {linkable ? (
-                    <a
-                      href={profileHref}
-                      target="_blank"
-                      rel="noopener noreferrer nofollow"
-                      referrerPolicy="no-referrer"
-                      style={{ color: "#3b82f6", fontWeight: 600, textDecoration: "none" }}
-                    >
-                      @{safeUsername}
-                    </a>
-                  ) : (
-                    <span title="Profile link unavailable">@{safeUsername}</span>
-                  )}
-                </td>
-                <td
-                  style={{
-                    padding: 15,
-                    borderBottom: "1px solid #e5e7eb",
-                    background: "white",
-                    color: "#6b7280",
-                    fontSize: "1rem",
-                    verticalAlign: "middle",
-                    textAlign: "left",
-                  }}
-                >
-                  {since}
-                </td>
-                <td
-                  style={{
-                    padding: 15,
-                    borderBottom: "1px solid #e5e7eb",
-                    background: "white",
-                    textAlign: "center",
-                    verticalAlign: "middle",
-                  }}
-                >
-                  {linkable ? (
-                    <a
-                      href={profileHref}
-                      target="_blank"
-                      rel="noopener noreferrer nofollow"
-                      referrerPolicy="no-referrer"
-                      style={{ display: "inline-block", position: "relative", height: 44, width: 80 }}
-                      onClick={() => handleCrack(index)}
-                    >
-                      <img
-                        src={crackedRows.has(index) ? "/crackedfollowingbutton.png" : "/folllowingbutton.png"}
-                        alt="Unfollow"
-                        style={{
-                          height: 100,
-                          width: "auto",
-                          cursor: "pointer",
-                          position: "absolute",
-                          top: "50%",
-                          left: "50%",
-                          transform: "translate(-50%, -50%)",
-                        }}
-                      />
-                    </a>
-                  ) : (
-                    <div style={{ display: "inline-block", position: "relative", height: 44, width: 80 }}>
-                      <img
-                        src="/folllowingbutton.png"
-                        alt="Unfollow (link unavailable)"
-                        style={{
-                          height: 100,
-                          width: "auto",
-                          opacity: 0.4,
-                          position: "absolute",
-                          top: "50%",
-                          left: "50%",
-                          transform: "translate(-50%, -50%)",
-                        }}
-                      />
-                    </div>
-                  )}
-                </td>
-                <td
-                  style={{
-                    padding: 15,
-                    borderBottom: "1px solid #e5e7eb",
-                    background: "white",
-                    textAlign: "center",
-                    verticalAlign: "middle",
-                  }}
-                >
-                  <img
-                    src="/removebutton.png"
-                    alt="Remove"
-                    onClick={() => handleRemoveUser(index)}
+              return (
+                <tr key={safeUsername + ":" + index}>
+                  <td
                     style={{
-                      height: 44,
-                      width: "auto",
-                      cursor: "pointer",
-                      display: "block",
-                      margin: "0 auto",
+                      padding: 'clamp(6px, 2vw, 15px)',
+                      borderBottom: "1px solid #e5e7eb",
+                      background: "white",
+                      color: "#3b82f6",
+                      fontWeight: 600,
+                      verticalAlign: "middle",
+                      textAlign: "left",
+                      maxWidth: 140,
+                      wordBreak: 'break-all',
                     }}
-                  />
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+                  >
+                    {linkable ? (
+                      <a
+                        href={profileHref}
+                        target="_blank"
+                        rel="noopener noreferrer nofollow"
+                        referrerPolicy="no-referrer"
+                        style={{ color: "#3b82f6", fontWeight: 600, textDecoration: "none" }}
+                      >
+                        @{safeUsername}
+                      </a>
+                    ) : (
+                      <span title="Profile link unavailable">@{safeUsername}</span>
+                    )}
+                  </td>
+                  <td
+                    style={{
+                      padding: 'clamp(6px, 2vw, 15px)',
+                      borderBottom: "1px solid #e5e7eb",
+                      background: "white",
+                      color: "#6b7280",
+                      fontSize: "0.9rem",
+                      verticalAlign: "middle",
+                      textAlign: "left",
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {since}
+                  </td>
+                  <td
+                    style={{
+                      padding: 'clamp(6px, 2vw, 15px)',
+                      borderBottom: "1px solid #e5e7eb",
+                      background: "white",
+                      textAlign: "center",
+                      verticalAlign: "middle",
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {linkable ? (
+                      <a
+                        href={profileHref}
+                        target="_blank"
+                        rel="noopener noreferrer nofollow"
+                        referrerPolicy="no-referrer"
+                        style={{ display: "inline-block", position: "relative", height: 44, width: 80 }}
+                        onClick={() => handleCrack(index)}
+                      >
+                        <img
+                          src={crackedRows.has(index) ? "/crackedfollowingbutton.png" : "/folllowingbutton.png"}
+                          alt="Unfollow"
+                          style={{
+                            height: 100,
+                            width: "auto",
+                            cursor: "pointer",
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                          }}
+                        />
+                      </a>
+                    ) : (
+                      <div style={{ display: "inline-block", position: "relative", height: 44, width: 80 }}>
+                        <img
+                          src="/folllowingbutton.png"
+                          alt="Unfollow (link unavailable)"
+                          style={{
+                            height: 100,
+                            width: "auto",
+                            opacity: 0.4,
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                          }}
+                        />
+                      </div>
+                    )}
+                  </td>
+                  <td
+                    style={{
+                      padding: 'clamp(6px, 2vw, 15px)',
+                      borderBottom: "1px solid #e5e7eb",
+                      background: "white",
+                      textAlign: "center",
+                      verticalAlign: "middle",
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    <img
+                      src="/removebutton.png"
+                      alt="Remove"
+                      onClick={() => handleRemoveUser(index)}
+                      style={{
+                        height: 44,
+                        width: "auto",
+                        cursor: "pointer",
+                        display: "block",
+                        margin: "0 auto",
+                      }}
+                    />
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
