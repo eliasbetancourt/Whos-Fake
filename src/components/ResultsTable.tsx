@@ -104,14 +104,15 @@ interface ResultsTableProps {
 
 const ResultsTable: React.FC<ResultsTableProps> = ({ results, showNotice = false }) => {
   const [unfollowersList, setUnfollowersList] = useState(results.unfollowers);
-  const [crackedRows, setCrackedRows] = useState<Set<number>>(new Set());
+  const [crackedRows, setCrackedRows] = useState<Set<string>>(new Set());
 
-  const handleRemoveUser = (index: number) => {
-    setUnfollowersList((prev: any[]) => prev.filter((_, i) => i !== index));
+  const handleRemoveUser = (username: string) => {
+    setUnfollowersList((prev: any[]) => prev.filter((u: any) => u.username !== username));
+    setCrackedRows(prev => { const next = new Set(prev); next.delete(username); return next; });
   };
 
-  const handleCrack = (index: number) => {
-    setCrackedRows(prev => new Set(prev).add(index));
+  const handleCrack = (username: string) => {
+    setCrackedRows(prev => new Set(prev).add(username));
   };
 
   return (
@@ -164,7 +165,7 @@ const ResultsTable: React.FC<ResultsTableProps> = ({ results, showNotice = false
         <table
           style={{
             width: "100%",
-            minWidth: 340,
+            minWidth: 520,
             borderCollapse: "collapse",
             marginTop: "2vw",
             background: "white",
@@ -251,7 +252,7 @@ const ResultsTable: React.FC<ResultsTableProps> = ({ results, showNotice = false
               const linkable = profileHref !== "#";
 
               return (
-                <tr key={safeUsername + ":" + index}>
+                <tr key={user.username || String(index)}>
                   <td
                     style={{
                       padding: 'clamp(6px, 2vw, 15px)',
@@ -310,10 +311,10 @@ const ResultsTable: React.FC<ResultsTableProps> = ({ results, showNotice = false
                         rel="noopener noreferrer nofollow"
                         referrerPolicy="no-referrer"
                         style={{ display: "inline-block", position: "relative", height: 44, width: 80 }}
-                        onClick={() => handleCrack(index)}
+                        onClick={() => handleCrack(user.username)}
                       >
                         <img
-                          src={crackedRows.has(index) ? "/crackedfollowingbutton.png" : "/folllowingbutton.png"}
+                          src={crackedRows.has(user.username) ? "/crackedfollowingbutton.png" : "/folllowingbutton.png"}
                           alt="Unfollow"
                           style={{
                             height: 100,
@@ -357,7 +358,7 @@ const ResultsTable: React.FC<ResultsTableProps> = ({ results, showNotice = false
                     <img
                       src="/removebutton.png"
                       alt="Remove"
-                      onClick={() => handleRemoveUser(index)}
+                      onClick={() => handleRemoveUser(user.username)}
                       style={{
                         height: 44,
                         width: "auto",

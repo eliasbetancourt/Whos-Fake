@@ -506,7 +506,7 @@ export default function WhosFakeApp() {
         width: "100vw",
         minWidth: 0,
         position: "relative",
-        overflowX: "hidden",
+        overflowX: "clip",
       }}
     >
       <div
