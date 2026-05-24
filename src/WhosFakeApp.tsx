@@ -642,7 +642,7 @@ export default function WhosFakeApp() {
             handleProcess={handleProcess}
           />
           {processing && <ProgressBar progress={progress} progressText={progressText} />}
-          {results && <ResultsTable results={results} />}
+          {results && <ResultsTable results={results} showNotice={true} />}
           {!results && !processing && (
             <div style={{ marginTop: '3vw', opacity: 0.6, pointerEvents: 'none', userSelect: 'none' }}>
               <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
