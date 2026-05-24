@@ -25,6 +25,7 @@ import Header from "./components/Header";
 import ProgressBar from "./components/ProgressBar";
 import ResultsTable from "./components/ResultsTable";
 import VideoSection from "./components/VideoSection";
+import Footer from "./components/Footer";
 
 // ---------------------------------------------------------------------------
 // File-level safety limits.  These are intentionally generous for real-world
@@ -665,6 +666,7 @@ export default function WhosFakeApp() {
         </div>
         <VideoSection />
         <HowToSteps />
+        <Footer />
       </div>
     </div>
   );

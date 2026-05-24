@@ -41,3 +41,21 @@
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# ---------------------------------------------------------------------------
+# Redirects
+#
+# IMPORTANT: redirects are evaluated top-to-bottom. Any specific rules (e.g.
+# bot/wp-admin traps) MUST be placed ABOVE the SPA catch-all below, or the
+# catch-all will shadow them.
+#
+# SPA fallback: serve index.html (HTTP 200, not a 3xx) for any path that does
+# not match a real file on disk, so client-side routes (/about, /contact,
+# /privacy) work on direct load and hard refresh. Because `force` is omitted,
+# real static assets (/assets/*, images, etc.) are served normally and only
+# unknown paths fall through to the React router.
+# ---------------------------------------------------------------------------
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
